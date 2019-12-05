@@ -1,0 +1,20 @@
+language: cpp
+compiler: gcc
+dist: bionic
+
+install:
+  - sudo apt-get install -y g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libpulse-dev libsox-dev libcpputest-dev libtool intltool autoconf automake make cmake
+
+before_script:
+  - git clone https://github.com/roc-project/roc.git
+  - scons -C roc -Q --compiler=gcc --build-3rdparty=openfec
+  - sudo scons -C roc -Q --compiler=gcc --build-3rdparty=openfec install
+
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make -j2
+
+after_failure:
+  - cat googletest-prefix/src/googletest-stamp/googletest-build-*.log
