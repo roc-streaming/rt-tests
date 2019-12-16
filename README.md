@@ -1,8 +1,8 @@
-# Non-functional tests for Roc
+# Real-time tests for Roc
 
 [![Build Status](https://travis-ci.org/roc-project/roc-tests.svg?branch=master)](https://travis-ci.org/roc-project/roc-tests)
 
-The scope if this repo is non-functional real-time tests that should run on real hardware, like:
+The scope if this repo is [non-functional](https://en.wikipedia.org/wiki/Non-functional_testing) real-time integration tests for [Roc](https://github.com/roc-project/roc) public API. These tests are supposed to run on real hardware and produce metrics to be checked for regressions. Some examples of non-functional tests are:
 
 * service quality tests
 * latency tests
@@ -14,7 +14,7 @@ The scope if this repo is non-functional real-time tests that should run on real
 * C++17 compiler
 * CMake >= 3.0.0
 * Google Test >= 1.10 (downloaded automatically)
-* Roc (shoould be installed system-wide)
+* Roc (should be pre-installed system-wide)
 
 ## Build
 
