@@ -1,6 +1,12 @@
 # Real-time tests for Roc Toolkit
 
-[![Build Status](https://travis-ci.org/roc-streaming/rt-tests.svg?branch=master)](https://travis-ci.org/roc-streaming/rt-tests)
+Branch    | Status
+--------- | ------
+`master`  | [![](https://travis-ci.org/roc-streaming/rt-tests.svg?branch=master)](https://travis-ci.org/roc-streaming/rt-tests)
+`develop` | [![](https://travis-ci.org/roc-streaming/rt-tests.svg?branch=develop)](https://travis-ci.org/roc-streaming/rt-tests)
+
+About
+-----
 
 The scope if this repo is [non-functional](https://en.wikipedia.org/wiki/Non-functional_testing) real-time integration tests for [Roc Toolkit](https://github.com/roc-streaming/roc-toolkit) public API. These tests are supposed to run on real hardware and produce metrics to be checked for regressions. Some examples of non-functional tests are:
 
@@ -9,14 +15,16 @@ The scope if this repo is [non-functional](https://en.wikipedia.org/wiki/Non-fun
 * performance tests (benchmarks)
 * stress tests
 
-## Dependencies
+Dependencies
+------------
 
 * C++17 compiler
 * CMake >= 3.0.0
 * Google Test >= 1.10 (downloaded automatically)
 * Roc Toolkit (should be pre-installed system-wide)
 
-## Build
+Build
+-----
 
 ```
 mkdir build
@@ -26,22 +34,26 @@ make -j4
 cd ..
 ```
 
-## Run
+Run
+---
 
 ```
 ./bin/rt-tests
 ```
 
-## Format code
+Format code
+-----------
 
 ```
 ./scripts/format.sh
 ```
 
-## Authors
+Authors
+-------
 
 See [here](https://github.com/roc-streaming/rt-tests/graphs/contributors).
 
-## License
+License
+-------
 
 [MPL-2.0](LICENSE)
