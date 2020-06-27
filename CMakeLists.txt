@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-project(roc-tests)
+project(rt-tests)
 
 include(ExternalProject)
 
@@ -45,22 +45,22 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     "${CMAKE_CXX_FLAGS} -Weverything")
 endif()
 
-add_executable(roc-tests
+add_executable(rt-tests
   main.cpp
   tests/test_service_quality.cpp
 )
 
-add_dependencies(roc-tests googletest)
+add_dependencies(rt-tests googletest)
 
 find_package(Threads)
 
-target_link_libraries(roc-tests
+target_link_libraries(rt-tests
   roc
   gtest
   gtest_main
   ${CMAKE_THREAD_LIBS_INIT})
 
-add_custom_command(TARGET roc-tests POST_BUILD
+add_custom_command(TARGET rt-tests POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy
      "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
      "${PROJECT_SOURCE_DIR}/compile_commands.json"
