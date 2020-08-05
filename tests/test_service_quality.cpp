@@ -14,7 +14,7 @@ protected:
         // create context
         roc_context_config context_config {};
 
-        context_ = roc_context_open(&context_config);
+        ASSERT_EQ(roc_context_open(&context_config, &context_), 0);
         ASSERT_NE(context_, nullptr);
 
         // create receiver
@@ -22,25 +22,29 @@ protected:
         receiver_config.frame_sample_rate = 44100;
         receiver_config.frame_channels = ROC_CHANNEL_SET_STEREO;
         receiver_config.frame_encoding = ROC_FRAME_ENCODING_PCM_FLOAT;
-        receiver_config.automatic_timing = 1;
-        receiver_config.resampler_profile = ROC_RESAMPLER_DISABLE;
+        receiver_config.clock_source = ROC_CLOCK_INTERNAL;
+        receiver_config.resampler_profile = ROC_RESAMPLER_PROFILE_DISABLE;
 
-        receiver_ = roc_receiver_open(context_, &receiver_config);
+        ASSERT_EQ(roc_receiver_open(context_, &receiver_config, &receiver_), 0);
         ASSERT_NE(receiver_, nullptr);
 
-        // bind receiver to two ports
-        roc_address source_addr;
-        ASSERT_EQ(roc_address_init(&source_addr, ROC_AF_AUTO, "127.0.0.1", 0), 0);
+        // bind receiver to two endpoints
+        roc_endpoint* source_endp {};
+        ASSERT_EQ(roc_endpoint_allocate(&source_endp), 0);
+        ASSERT_EQ(roc_endpoint_set_protocol(source_endp, ROC_PROTO_RTP_RS8M_SOURCE), 0);
+        ASSERT_EQ(roc_endpoint_set_host(source_endp, "127.0.0.1"), 0);
+        ASSERT_EQ(roc_endpoint_set_port(source_endp, 0), 0);
 
-        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_PORT_AUDIO_SOURCE,
-                                    ROC_PROTO_RTP_RS8M_SOURCE, &source_addr),
+        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_INTERFACE_AUDIO_SOURCE, source_endp),
                   0);
 
-        roc_address repair_addr;
-        ASSERT_EQ(roc_address_init(&repair_addr, ROC_AF_AUTO, "127.0.0.1", 0), 0);
+        roc_endpoint* repair_endp {};
+        ASSERT_EQ(roc_endpoint_allocate(&repair_endp), 0);
+        ASSERT_EQ(roc_endpoint_set_protocol(repair_endp, ROC_PROTO_RS8M_REPAIR), 0);
+        ASSERT_EQ(roc_endpoint_set_host(repair_endp, "127.0.0.1"), 0);
+        ASSERT_EQ(roc_endpoint_set_port(repair_endp, 0), 0);
 
-        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_PORT_AUDIO_REPAIR,
-                                    ROC_PROTO_RS8M_REPAIR, &repair_addr),
+        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_INTERFACE_AUDIO_REPAIR, repair_endp),
                   0);
 
         // create sender
@@ -48,27 +52,23 @@ protected:
         sender_config.frame_sample_rate = 44100;
         sender_config.frame_channels = ROC_CHANNEL_SET_STEREO;
         sender_config.frame_encoding = ROC_FRAME_ENCODING_PCM_FLOAT;
-        sender_config.automatic_timing = 1;
-        sender_config.resampler_profile = ROC_RESAMPLER_DISABLE;
+        sender_config.clock_source = ROC_CLOCK_INTERNAL;
+        sender_config.resampler_profile = ROC_RESAMPLER_PROFILE_DISABLE;
         sender_config.fec_code = ROC_FEC_RS8M;
 
-        sender_ = roc_sender_open(context_, &sender_config);
+        ASSERT_EQ(roc_sender_open(context_, &sender_config, &sender_), 0);
         ASSERT_NE(sender_, nullptr);
 
-        // bind sender to a port
-        roc_address sender_addr;
-        ASSERT_EQ(roc_address_init(&sender_addr, ROC_AF_AUTO, "127.0.0.1", 0), 0);
-
-        ASSERT_EQ(roc_sender_bind(sender_, &sender_addr), 0);
-
-        // connect sender to receiver ports
-        ASSERT_EQ(roc_sender_connect(sender_, ROC_PORT_AUDIO_SOURCE,
-                                     ROC_PROTO_RTP_RS8M_SOURCE, &source_addr),
+        // connect sender to receiver endpoints
+        ASSERT_EQ(roc_sender_connect(sender_, ROC_INTERFACE_AUDIO_SOURCE, source_endp),
                   0);
 
-        ASSERT_EQ(roc_sender_connect(sender_, ROC_PORT_AUDIO_REPAIR,
-                                     ROC_PROTO_RS8M_REPAIR, &repair_addr),
+        ASSERT_EQ(roc_sender_connect(sender_, ROC_INTERFACE_AUDIO_REPAIR, repair_endp),
                   0);
+
+        // deallocate endpoint objects
+        ASSERT_EQ(roc_endpoint_deallocate(source_endp), 0);
+        ASSERT_EQ(roc_endpoint_deallocate(repair_endp), 0);
     }
 
     void TearDown() override {
