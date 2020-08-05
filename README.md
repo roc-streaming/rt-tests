@@ -14,6 +14,7 @@ The scope if this repo is [non-functional](https://en.wikipedia.org/wiki/Non-fun
 * latency tests
 * performance tests (benchmarks)
 * stress tests
+* tests invloving real network interfaces and audio devices
 
 Dependencies
 ------------
