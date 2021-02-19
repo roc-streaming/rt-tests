@@ -2,8 +2,8 @@
 
 Branch    | Status
 --------- | ------
-`master`  | [![](https://travis-ci.org/roc-streaming/rt-tests.svg?branch=master)](https://travis-ci.org/roc-streaming/rt-tests)
-`develop` | [![](https://travis-ci.org/roc-streaming/rt-tests.svg?branch=develop)](https://travis-ci.org/roc-streaming/rt-tests)
+`master`  | [![](https://github.com/roc-streaming/rt-tests/workflows/build/badge.svg?branch=master)](https://github.com/roc-streaming/rt-tests/actions)
+`develop` | [![](https://github.com/roc-streaming/rt-tests/workflows/build/badge.svg?branch=develop)](https://github.com/roc-streaming/rt-tests/actions)
 
 About
 -----
