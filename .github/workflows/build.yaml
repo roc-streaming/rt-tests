@@ -1,14 +1,20 @@
 name: build
+
 on:
   repository_dispatch:
+
   push:
     branches:
       - master
       - develop
+
   pull_request:
     branches:
       - master
       - develop
+
+  schedule:
+    - cron: '0 0 * * 1'
 
 jobs:
   ubuntu:
