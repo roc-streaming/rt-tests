@@ -38,8 +38,5 @@ jobs:
 
       - name: Build tests
         run: |
-          mkdir build
-          cd build
-          cmake ..
-          make -j$(nproc --all)
-          test -e ../bin/rt-tests
+          make build
+          test -e ./bin/rt-tests

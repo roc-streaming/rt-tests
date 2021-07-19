@@ -24,29 +24,25 @@ Dependencies
 * Google Test >= 1.10 (downloaded automatically)
 * Roc Toolkit (should be pre-installed system-wide)
 
-Build
------
+Instructions
+------------
+
+Build and run:
 
 ```
-mkdir build
-cd build
-cmake ..
-make -j4
-cd ..
+make
 ```
 
-Run
----
+Clean build results:
 
 ```
-./bin/rt-tests
+make clean
 ```
 
-Format code
------------
+Format code:
 
 ```
-./scripts/format.sh
+make fmt
 ```
 
 Authors
