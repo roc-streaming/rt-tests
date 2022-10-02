@@ -99,8 +99,22 @@ protected:
             EXPECT_EQ(roc_sender_write(sender_, &frame), 0);
         }
     }
+    
+    const std::vector<float>& GetSend(size_t frame_size, size_t num_frames) const {
+        std::vector<float> frame_buf(frame_size);
 
-    bool Receive(size_t frame_size, size_t num_frames) {
+        std::fill(frame_buf.begin(), frame_buf.end(), 0.5);
+
+        for (size_t n = 0; n < num_frames; n++) {
+            roc_frame frame = {};
+            frame.samples = &frame_buf[0];
+            frame.samples_size = frame_buf.size() * sizeof(float);
+        }
+        
+        return frame_buf;
+    }
+    
+    void Receive(size_t frame_size, size_t num_frames) {
         std::vector<float> frame_buf(frame_size);
 
         bool received_something = false;
@@ -120,18 +134,36 @@ protected:
             }
         }
         
-        return received_something;
+        EXPECT_TRUE(received_something);
     }
 
+    const std::vector<float>& GetReceive(size_t frame_size, size_t num_frames) const {
+        std::vector<float> frame_buf(frame_size);
+        
+        for (size_t n = 0; n < num_frames; n++) {
+            std::fill(frame_buf.begin(), frame_buf.end(), 0);
+
+            roc_frame frame = {};
+            frame.samples = &frame_buf[0];
+            frame.samples_size = frame_buf.size() * sizeof(float);
+        }
+        
+        return frame_buf;
+    }
+    
     roc_context* context_ {};
     roc_receiver* receiver_ {};
     roc_sender* sender_ {};
 };
 
 TEST_F(ServiceQuality, NoLoss) {
-    auto sending = std::async(std::launch::async, [=]() { Send(256, 500); });
+    int size = 256;
+    int num = 500;
+    auto sending = std::async(std::launch::async, [=]() { Send(size, num); });
 
-    EXPECT_TRUE(Receive(256, 500));
-
+    Receive(size, num);
+    
+    EXPECT_TRUE(GetSend(size, num) == GetReceive(size, num));
+    
     sending.wait();
 }
