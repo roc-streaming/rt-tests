@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <roc/config.h>
 #include <roc/context.h>
 #include <roc/receiver.h>
 #include <roc/sender.h>
@@ -35,7 +36,8 @@ protected:
         ASSERT_EQ(roc_endpoint_set_host(source_endp, "127.0.0.1"), 0);
         ASSERT_EQ(roc_endpoint_set_port(source_endp, 0), 0);
 
-        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_INTERFACE_AUDIO_SOURCE, source_endp),
+        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_SLOT_DEFAULT,
+                                    ROC_INTERFACE_AUDIO_SOURCE, source_endp),
                   0);
 
         roc_endpoint* repair_endp {};
@@ -44,7 +46,8 @@ protected:
         ASSERT_EQ(roc_endpoint_set_host(repair_endp, "127.0.0.1"), 0);
         ASSERT_EQ(roc_endpoint_set_port(repair_endp, 0), 0);
 
-        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_INTERFACE_AUDIO_REPAIR, repair_endp),
+        ASSERT_EQ(roc_receiver_bind(receiver_, ROC_SLOT_DEFAULT,
+                                    ROC_INTERFACE_AUDIO_REPAIR, repair_endp),
                   0);
 
         // create sender
@@ -54,16 +57,18 @@ protected:
         sender_config.frame_encoding = ROC_FRAME_ENCODING_PCM_FLOAT;
         sender_config.clock_source = ROC_CLOCK_INTERNAL;
         sender_config.resampler_profile = ROC_RESAMPLER_PROFILE_DISABLE;
-        sender_config.fec_code = ROC_FEC_RS8M;
+        sender_config.fec_encoding = ROC_FEC_ENCODING_RS8M;
 
         ASSERT_EQ(roc_sender_open(context_, &sender_config, &sender_), 0);
         ASSERT_NE(sender_, nullptr);
 
         // connect sender to receiver endpoints
-        ASSERT_EQ(roc_sender_connect(sender_, ROC_INTERFACE_AUDIO_SOURCE, source_endp),
+        ASSERT_EQ(roc_sender_connect(sender_, ROC_SLOT_DEFAULT,
+                                     ROC_INTERFACE_AUDIO_SOURCE, source_endp),
                   0);
 
-        ASSERT_EQ(roc_sender_connect(sender_, ROC_INTERFACE_AUDIO_REPAIR, repair_endp),
+        ASSERT_EQ(roc_sender_connect(sender_, ROC_SLOT_DEFAULT,
+                                     ROC_INTERFACE_AUDIO_REPAIR, repair_endp),
                   0);
 
         // deallocate endpoint objects
