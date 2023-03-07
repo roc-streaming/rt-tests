@@ -1,9 +1,6 @@
 # Real-time tests for Roc Toolkit
 
-Branch    | Status
---------- | ------
-`master`  | [![](https://github.com/roc-streaming/rt-tests/workflows/build/badge.svg?branch=master)](https://github.com/roc-streaming/rt-tests/actions)
-`develop` | [![](https://github.com/roc-streaming/rt-tests/workflows/build/badge.svg?branch=develop)](https://github.com/roc-streaming/rt-tests/actions)
+[![Build](https://github.com/roc-streaming/rt-tests/workflows/build/badge.svg?branch=main)](https://github.com/roc-streaming/rt-tests/actions/workflows/build.yml?query=branch%3Amain) [![Matrix chat](https://matrix.to/img/matrix-badge.svg)](https://app.element.io/#/room/#roc-streaming:matrix.org)
 
 About
 -----

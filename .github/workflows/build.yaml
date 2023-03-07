@@ -5,13 +5,11 @@ on:
 
   push:
     branches:
-      - master
-      - develop
+      - main
 
   pull_request:
     branches:
-      - master
-      - develop
+      - main
 
   schedule:
     - cron: '0 0 * * 1'
@@ -31,8 +29,7 @@ jobs:
 
       - name: Build Roc
         run: |
-          git clone --single-branch --branch ${GITHUB_REF##*/} \
-              https://github.com/roc-streaming/roc-toolkit.git /tmp/roc
+          git clone https://github.com/roc-streaming/roc-toolkit.git /tmp/roc
           scons -C /tmp/roc -Q --build-3rdparty=openfec
           sudo scons -C /tmp/roc -Q --build-3rdparty=openfec install
 
