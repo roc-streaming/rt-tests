@@ -32,13 +32,14 @@ Compatible Roc Toolkit senders and receivers include:
 * [C library](https://roc-streaming.org/toolkit/docs/api.html) and [bindings for other languages](https://roc-streaming.org/toolkit/docs/api/bindings.html)
 * [end-user apps](https://roc-streaming.org/toolkit/docs/tools/applications.html)
 
-Dependencies
+Requirements
 ------------
 
+* Linux or macOS
 * C++17 compiler
 * CMake >= 3.0.0
 * Google Test >= 1.10 (downloaded automatically)
-* Roc Toolkit (should be pre-installed system-wide)
+* Roc Toolkit (should be pre-installed system-wide, see [instructions](https://roc-streaming.org/toolkit/docs/building/user_cookbook.html))
 
 Instructions
 ------------
