@@ -61,6 +61,22 @@ Format code:
 make fmt
 ```
 
+Workflow
+--------
+
+The diagram below illustrates generic workflow of a test from this repo.
+
+Explanations:
+
+* test writes stream of audio frames to roc sender
+* roc sender encodes audio into UDP packets and sends them to roc receiver
+* optionally, test inserts a UDP proxy between sender and receiver, to alter packets somehow (e.g. introduce packet losses)
+* roc receiver receives packets, repairs losses, adjusts clock, decodes audio from UDP packets, and produces stream of audio frames
+* test reads stream of audio frames from roc receiver
+* test compares original and retrieved audio stream and computes some metrics, depending on the test (e.g. latency or service quality)
+
+![](./docs/workflow.drawio.png)
+
 Authors
 -------
 
