@@ -101,9 +101,20 @@ bool CommandLine::compare_wavfiles(const char* file1, const char* file2) {
     // Compare file attributes
     if (sfinfo1.channels != sfinfo2.channels
         || sfinfo1.samplerate != sfinfo2.samplerate) {
-        sf_close(sndfile1);
-        sf_close(sndfile2);
-        std::cout << "File attributes do not match" << std::endl;
+        if (sfinfo1.channels != sfinfo2.channels) {
+            sf_close(sndfile1);
+            sf_close(sndfile2);
+            std::cout << "Channels do not match\n"
+                      << "sended file:" << sfinfo1.channels << "\n"
+                      << "received file:" << sfinfo2.channels << std::endl;
+        }
+        if (sfinfo1.samplerate != sfinfo2.samplerate) {
+            sf_close(sndfile1);
+            sf_close(sndfile2);
+            std::cout << "Samplerate does not match\n"
+                      << "sended file:" << sfinfo1.samplerate << "\n"
+                      << "received file:" << sfinfo2.samplerate << std::endl;
+        }
         return false;
     }
 
