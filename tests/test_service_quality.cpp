@@ -20,11 +20,11 @@ protected:
 
         // create receiver
         roc_receiver_config receiver_config {};
-        receiver_config.frame_sample_rate = 44100;
-        receiver_config.frame_channels = ROC_CHANNEL_SET_STEREO;
-        receiver_config.frame_encoding = ROC_FRAME_ENCODING_PCM_FLOAT;
-        receiver_config.clock_source = ROC_CLOCK_INTERNAL;
-        receiver_config.resampler_profile = ROC_RESAMPLER_PROFILE_DISABLE;
+        receiver_config.frame_encoding.rate = 44100;
+        receiver_config.frame_encoding.channels = ROC_CHANNEL_LAYOUT_STEREO;
+        receiver_config.frame_encoding.format = ROC_FORMAT_PCM_FLOAT32;
+        receiver_config.clock_source = ROC_CLOCK_SOURCE_INTERNAL;
+        receiver_config.clock_sync_backend = ROC_CLOCK_SYNC_BACKEND_DISABLE;
 
         ASSERT_EQ(roc_receiver_open(context_, &receiver_config, &receiver_), 0);
         ASSERT_NE(receiver_, nullptr);
@@ -52,11 +52,10 @@ protected:
 
         // create sender
         roc_sender_config sender_config {};
-        sender_config.frame_sample_rate = 44100;
-        sender_config.frame_channels = ROC_CHANNEL_SET_STEREO;
-        sender_config.frame_encoding = ROC_FRAME_ENCODING_PCM_FLOAT;
-        sender_config.clock_source = ROC_CLOCK_INTERNAL;
-        sender_config.resampler_profile = ROC_RESAMPLER_PROFILE_DISABLE;
+        sender_config.frame_encoding.rate = 44100;
+        sender_config.frame_encoding.channels = ROC_CHANNEL_LAYOUT_STEREO;
+        sender_config.frame_encoding.format = ROC_FORMAT_PCM_FLOAT32;
+        sender_config.clock_source = ROC_CLOCK_SOURCE_INTERNAL;
         sender_config.fec_encoding = ROC_FEC_ENCODING_RS8M;
 
         ASSERT_EQ(roc_sender_open(context_, &sender_config, &sender_), 0);
