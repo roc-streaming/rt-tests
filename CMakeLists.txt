@@ -16,8 +16,28 @@ ExternalProject_Add(googletest
   LOG_BUILD         ON
 )
 
+include(FetchContent)
+
+FetchContent_Declare(
+  subprocess
+  GIT_REPOSITORY https://github.com/arun11299/cpp-subprocess.git
+  GIT_TAG master
+)
+
+FetchContent_MakeAvailable(subprocess)
+
+include(FetchContent)
+
+FetchContent_Declare(
+  libsndfile
+  GIT_REPOSITORY https://github.com/libsndfile/libsndfile.git
+  GIT_TAG        master
+)
+
+FetchContent_MakeAvailable(libsndfile)
+
 include_directories(
-  "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include" 
 )
 
 link_directories(
@@ -48,6 +68,7 @@ endif()
 add_executable(rt-tests
   main.cpp
   tests/test_service_quality.cpp
+  tests/command_line.cpp
 )
 
 add_dependencies(rt-tests googletest)
@@ -58,6 +79,8 @@ target_link_libraries(rt-tests
   roc
   gtest
   gtest_main
+  subprocess
+  sndfile
   ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_command(TARGET rt-tests POST_BUILD
