@@ -16,12 +16,28 @@ ExternalProject_Add(googletest
   LOG_BUILD         ON
 )
 
+set(ROC_TOOLKIT_BRANCH master)
+
+ExternalProject_Add(roc-toolkit
+  GIT_REPOSITORY    https://github.com/roc-streaming/roc-toolkit.git
+  GIT_TAG           origin/${ROC_TOOLKIT_BRANCH}
+  GIT_SHALLOW       ON
+  SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src"
+  BUILD_COMMAND     scons -Q --build-3rdparty=openfec -C "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src"
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+  CONFIGURE_COMMAND ""
+  LOG_DOWNLOAD      ON
+)
+
 include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/src/public_api/include"
 )
 
 link_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/googletest-build/lib"
+  "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/bin/x86_64-pc-linux-gnu/"
 )
 
 set(CMAKE_CXX_STANDARD 17)

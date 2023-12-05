@@ -39,7 +39,7 @@ Requirements
 * C++17 compiler
 * CMake >= 3.0.0
 * Google Test >= 1.10 (downloaded automatically)
-* Roc Toolkit (should be pre-installed system-wide, see [instructions](https://roc-streaming.org/toolkit/docs/building/user_cookbook.html))
+* Roc Toolkit (downloaded automatically)
 
 Instructions
 ------------
@@ -60,6 +60,13 @@ Format code:
 
 ```
 make fmt
+```
+
+Specify **roc-toolkit** branch:
+
+```
+mkdir build && cd build
+cmake -D ROC_TOOLKIT_BRANCH=master .. && make
 ```
 
 Workflow
