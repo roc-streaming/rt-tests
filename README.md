@@ -44,7 +44,25 @@ Requirements
 Instructions
 ------------
 
-Build and run:
+### Simple build
+When using this method, CMake will automatically download and build dependencies (Roc Toolkit). Roc will be statically linked into the modules and there is no need to install it into the system.
+
+First install build tools:
+
+```
+sudo apt install -y \
+    gcc g++ \
+    make \
+    libtool intltool m4 autoconf automake \
+    meson libsndfile-dev \
+    cmake \
+    scons \
+    git \
+    wget \
+    python3
+```
+
+Next build and run:
 
 ```
 make
@@ -62,12 +80,27 @@ Format code:
 make fmt
 ```
 
-Specify **roc-toolkit** branch:
+To specify **roc-toolkit** branch use cmake flag `ROC_TOOLKIT_BRANCH`
 
 ```
 mkdir build && cd build
-cmake -D ROC_TOOLKIT_BRANCH=master .. && make
+cmake -DROC_TOOLKIT_BRANCH=master .. && make
 ```
+
+### Advanced bulid
+
+You can disable automatic downloading of roc-toolkit and build it manually.
+
+Download, build and install Roc Toolkit into the system as described on [this page](https://roc-streaming.org/toolkit/docs/building/user_cookbook.html)
+
+```
+mkdir build && cd build
+cmake -DDOWNLOAD_ROC=OFF .. && make
+```
+To provide custom path to roc-toolkit library and headers use flags
+`ROC_INCLUDE_DIR` and `ROC_LIB_DIR`
+
+
 
 Workflow
 --------

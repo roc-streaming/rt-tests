@@ -16,28 +16,40 @@ ExternalProject_Add(googletest
   LOG_BUILD         ON
 )
 
-set(ROC_TOOLKIT_BRANCH master)
+include("cmake/define_option.cmake")
 
-ExternalProject_Add(roc-toolkit
-  GIT_REPOSITORY    https://github.com/roc-streaming/roc-toolkit.git
-  GIT_TAG           origin/${ROC_TOOLKIT_BRANCH}
-  GIT_SHALLOW       ON
-  SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src"
-  BUILD_COMMAND     scons -Q --build-3rdparty=openfec -C "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src"
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
-  CONFIGURE_COMMAND ""
-  LOG_DOWNLOAD      ON
-)
+define_option(ROC_INCLUDE_DIR "" STRING "roc toolkit include directory")
+define_option(ROC_LIB_DIR "" STRING "roc toolkit library directory")
+define_option(DOWNLOAD_ROC ON BOOL "automatically download and build roc-toolkit")
+
+if(DOWNLOAD_ROC)
+  include("cmake/download_roc.cmake")
+else()
+  if(NOT ROC_INCLUDE_DIR STREQUAL "")
+    get_filename_component(ROC_INCLUDE_DIR "${ROC_INCLUDE_DIR}" ABSOLUTE)
+    message(STATUS "Using ROC_INCLUDE_DIR - ${ROC_INCLUDE_DIR}")
+
+    include_directories(SYSTEM "${ROC_INCLUDE_DIR}")
+  endif()
+
+  if(NOT ROC_LIB_DIR STREQUAL "")
+    get_filename_component(ROC_LIB_DIR "${ROC_LIB_DIR}" ABSOLUTE)
+    message(STATUS "Using ROC_LIB_DIR - ${ROC_LIB_DIR}")
+
+    link_directories("${ROC_LIB_DIR}")
+  endif()
+
+  link_libraries("roc")
+endif()
 
 include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include"
-  "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/src/public_api/include"
+  #"${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/src/public_api/include"
 )
 
 link_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/googletest-build/lib"
-  "${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/bin/x86_64-pc-linux-gnu/"
+  #"${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/bin/x86_64-pc-linux-gnu/"
 )
 
 set(CMAKE_CXX_STANDARD 17)
@@ -66,12 +78,12 @@ add_executable(rt-tests
   tests/test_service_quality.cpp
 )
 
-add_dependencies(rt-tests googletest)
+add_dependencies(rt-tests googletest roc)
 
 find_package(Threads)
 
 target_link_libraries(rt-tests
-  roc
+  -l:libroc.a
   gtest
   gtest_main
   ${CMAKE_THREAD_LIBS_INIT})
