@@ -51,15 +51,11 @@ First install build tools:
 
 ```
 sudo apt install -y \
-    gcc g++ \
-    make \
-    libtool intltool m4 autoconf automake \
-    meson libsndfile-dev \
-    cmake \
-    scons \
-    git \
-    wget \
-    python3
+    g++ pkg-config scons ragel gengetopt \
+      libuv1-dev libunwind-dev \
+      libpulse-dev libsox-dev \
+      libcpputest-dev libspeexdsp-dev \
+      libtool intltool autoconf automake make cmake
 ```
 
 Next build and run:
