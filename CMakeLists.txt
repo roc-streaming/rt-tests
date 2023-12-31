@@ -10,6 +10,7 @@ define_option(ROC_LIB_DIR "" STRING "roc toolkit library directory")
 define_option(DOWNLOAD_ROC ON BOOL "automatically download and build roc-toolkit")
 
 if(DOWNLOAD_ROC)
+  define_option(ROC_BRANCH "master" STRING "roc-toolkit branch")
   include("cmake/download_roc.cmake")
 else()
   if(NOT ROC_INCLUDE_DIR STREQUAL "")

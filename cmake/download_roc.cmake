@@ -27,11 +27,10 @@ set(SCONS_CMD
   #"STRIP=${CMAKE_STRIP}"
 )  
 
-define_option(ROC_TOOLKIT_BRANCH "master" STRING "roc-toolkit branch")
 
 ExternalProject_Add(RocLibrary
   GIT_REPOSITORY "https://github.com/roc-streaming/roc-toolkit.git"
-  GIT_TAG origin/${ROC_TOOLKIT_BRANCH}
+  GIT_TAG origin/${ROC_BRANCH}
   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/roc-src"
   INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/roc-prefix"
   BUILD_IN_SOURCE ON
