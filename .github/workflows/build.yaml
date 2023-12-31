@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir build && cd build
           cmake -DDOWNLOAD_ROC=OFF .. && make -j
-          test -e ./bin/rt-tests
+          test -e ../bin/rt-tests
 
   ubuntu-download-roc:
     runs-on: ubuntu-latest
@@ -57,4 +57,4 @@ jobs:
         run: |
           mkdir build && cd build
           cmake .. && make -j
-          test -e ./bin/rt-tests
+          test -e ../bin/rt-tests
