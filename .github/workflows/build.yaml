@@ -36,5 +36,25 @@ jobs:
 
       - name: Build tests
         run: |
-          make build
+          mkdir build && cd build
+          cmake -DDOWNLOAD_ROC=OFF .. && make -j
+          test -e ./bin/rt-tests
+
+  ubuntu-download-roc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install g++ pkg-config scons ragel gengetopt \
+            libuv1-dev libunwind-dev libpulse-dev libsox-dev libcpputest-dev libspeexdsp-dev \
+            libtool intltool autoconf automake make cmake
+
+      - name: Build tests
+        run: |
+          mkdir build && cd build
+          cmake .. && make -j
           test -e ./bin/rt-tests
