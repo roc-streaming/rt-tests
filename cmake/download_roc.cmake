@@ -29,7 +29,7 @@ set(SCONS_CMD
 
 define_option(ROC_TOOLKIT_BRANCH "master" STRING "roc-toolkit branch")
 
-ExternalProject_Add(roc
+ExternalProject_Add(RocLibrary
   GIT_REPOSITORY "https://github.com/roc-streaming/roc-toolkit.git"
   GIT_TAG origin/${ROC_TOOLKIT_BRANCH}
   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/roc-src"

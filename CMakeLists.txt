@@ -2,21 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(rt-tests)
 
-include(ExternalProject)
-
-ExternalProject_Add(googletest
-  GIT_REPOSITORY    https://github.com/google/googletest.git
-  GIT_TAG           release-1.12.1
-  GIT_SHALLOW       ON
-  SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-src"
-  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
-  LOG_DOWNLOAD      ON
-  LOG_BUILD         ON
-)
-
 include("cmake/define_option.cmake")
+include("cmake/download_googletest.cmake")
 
 define_option(ROC_INCLUDE_DIR "" STRING "roc toolkit include directory")
 define_option(ROC_LIB_DIR "" STRING "roc toolkit library directory")
@@ -41,16 +28,6 @@ else()
 
   link_libraries("roc")
 endif()
-
-include_directories(
-  "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include"
-  #"${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/src/public_api/include"
-)
-
-link_directories(
-  "${CMAKE_CURRENT_BINARY_DIR}/googletest-build/lib"
-  #"${CMAKE_CURRENT_BINARY_DIR}/roc-toolkit-src/bin/x86_64-pc-linux-gnu/"
-)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -78,14 +55,15 @@ add_executable(rt-tests
   tests/test_service_quality.cpp
 )
 
-add_dependencies(rt-tests googletest roc)
+add_dependencies(rt-tests googletest RocLibrary)
 
 find_package(Threads)
 
 target_link_libraries(rt-tests
-  -l:libroc.a
+  roc
   gtest
   gtest_main
+  ${CMAKE_DL_LIBS}
   ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_command(TARGET rt-tests POST_BUILD
