@@ -40,7 +40,7 @@ jobs:
           cmake -DDOWNLOAD_ROC=OFF .. && make -j
           test -e ../bin/rt-tests
 
-  ubuntu-roc-custom-path:
+  ubuntu-roc-custom-path-roc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -62,7 +62,9 @@ jobs:
       - name: Build tests
         run: |
           mkdir build && cd build
-          cmake -DDOWNLOAD_ROC=OFF .. && make -j
+          cmake -DDOWNLOAD_ROC=OFF \
+           -DROC_INCLUDE_DIR=/tmp/roc/output/include
+           -DROC_LIB_DIR=/tmp/roc/output/lib .. && make -j
           test -e ../bin/rt-tests
 
   ubuntu-download-roc:
