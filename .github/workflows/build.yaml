@@ -63,7 +63,7 @@ jobs:
         run: |
           mkdir build && cd build
           cmake -DDOWNLOAD_ROC=OFF \
-           -DROC_INCLUDE_DIR=/tmp/roc/output/include
+           -DROC_INCLUDE_DIR=/tmp/roc/output/include \
            -DROC_LIB_DIR=/tmp/roc/output/lib .. && make -j
           test -e ../bin/rt-tests
 
