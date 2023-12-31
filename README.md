@@ -68,23 +68,26 @@ Next build and run:
 make
 ```
 
-Clean build results:
-
-```
-make clean
-```
-
-Format code:
-
-```
-make fmt
-```
-
 To specify **roc-toolkit** branch use cmake flag `ROC_TOOLKIT_BRANCH`
 
 ```
 mkdir build && cd build
 cmake -DROC_TOOLKIT_BRANCH=master .. && make
+```
+### Additional targets
+
+You can accomplish these additional tasks using the following targets.
+
+To clean working build directory:
+
+```
+make clean
+```
+
+To format code:
+
+```
+make fmt
 ```
 
 ### Advanced bulid
