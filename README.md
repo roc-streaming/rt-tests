@@ -39,28 +39,67 @@ Requirements
 * C++17 compiler
 * CMake >= 3.0.0
 * Google Test >= 1.10 (downloaded automatically)
-* Roc Toolkit (should be pre-installed system-wide, see [instructions](https://roc-streaming.org/toolkit/docs/building/user_cookbook.html))
+* Roc Toolkit (downloaded automatically)
 
 Instructions
 ------------
 
-Build and run:
+### Simple build
+When using this method, CMake will automatically download and build dependencies (Roc Toolkit). Roc will be statically linked into the modules and there is no need to install it into the system.
+
+First install build tools:
+
+```
+sudo apt install -y \
+    g++ pkg-config scons ragel gengetopt \
+      libuv1-dev libunwind-dev \
+      libpulse-dev libsox-dev \
+      libcpputest-dev libspeexdsp-dev \
+      libtool intltool autoconf automake make cmake
+```
+
+Next build and run:
 
 ```
 make
 ```
 
-Clean build results:
+To specify **roc-toolkit** branch use cmake flag `ROC_TOOLKIT_BRANCH`
+
+```
+mkdir build && cd build
+cmake -DROC_TOOLKIT_BRANCH=master .. && make
+```
+### Additional targets
+
+You can accomplish these additional tasks using the following targets.
+
+To clean working build directory:
 
 ```
 make clean
 ```
 
-Format code:
+To format code:
 
 ```
 make fmt
 ```
+
+### Advanced bulid
+
+You can disable automatic downloading of roc-toolkit and build it manually.
+
+Download, build and install Roc Toolkit into the system as described on [this page](https://roc-streaming.org/toolkit/docs/building/user_cookbook.html)
+
+```
+mkdir build && cd build
+cmake -DDOWNLOAD_ROC=OFF .. && make
+```
+To provide custom path to roc-toolkit library and headers use flags
+`ROC_INCLUDE_DIR` and `ROC_LIB_DIR`
+
+
 
 Workflow
 --------

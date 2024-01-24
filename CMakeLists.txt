@@ -2,27 +2,35 @@ cmake_minimum_required(VERSION 3.5)
 
 project(rt-tests)
 
-include(ExternalProject)
+include("cmake/define_option.cmake")
+include("cmake/download_googletest.cmake")
 
-ExternalProject_Add(googletest
-  GIT_REPOSITORY    https://github.com/google/googletest.git
-  GIT_TAG           release-1.12.1
-  GIT_SHALLOW       ON
-  SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-src"
-  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
-  LOG_DOWNLOAD      ON
-  LOG_BUILD         ON
-)
+define_option(ROC_INCLUDE_DIR "" STRING "roc toolkit include directory")
+define_option(ROC_LIB_DIR "" STRING "roc toolkit library directory")
+define_option(DOWNLOAD_ROC ON BOOL "automatically download and build roc-toolkit")
 
-include_directories(
-  "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include"
-)
+if(DOWNLOAD_ROC)
+  define_option(ROC_BRANCH "master" STRING "roc-toolkit branch")
+  include("cmake/download_roc.cmake")
+  add_custom_target(download_roc DEPENDS RocLibrary)
+else()
+  add_custom_target(download_roc) # download_roc an empty target in this case
+  if(NOT ROC_INCLUDE_DIR STREQUAL "")
+    get_filename_component(ROC_INCLUDE_DIR "${ROC_INCLUDE_DIR}" ABSOLUTE)
+    message(STATUS "Using ROC_INCLUDE_DIR - ${ROC_INCLUDE_DIR}")
 
-link_directories(
-  "${CMAKE_CURRENT_BINARY_DIR}/googletest-build/lib"
-)
+    include_directories(SYSTEM "${ROC_INCLUDE_DIR}")
+  endif()
+
+  if(NOT ROC_LIB_DIR STREQUAL "")
+    get_filename_component(ROC_LIB_DIR "${ROC_LIB_DIR}" ABSOLUTE)
+    message(STATUS "Using ROC_LIB_DIR - ${ROC_LIB_DIR}")
+
+    link_directories("${ROC_LIB_DIR}")
+  endif()
+
+  link_libraries("roc")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -50,7 +58,7 @@ add_executable(rt-tests
   tests/test_service_quality.cpp
 )
 
-add_dependencies(rt-tests googletest)
+add_dependencies(rt-tests googletest download_roc)
 
 find_package(Threads)
 
@@ -58,6 +66,7 @@ target_link_libraries(rt-tests
   roc
   gtest
   gtest_main
+  ${CMAKE_DL_LIBS}
   ${CMAKE_THREAD_LIBS_INIT})
 
 add_custom_command(TARGET rt-tests POST_BUILD
