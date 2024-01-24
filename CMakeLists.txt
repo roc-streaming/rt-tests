@@ -8,9 +8,9 @@ include("cmake/download_googletest.cmake")
 define_option(ROC_INCLUDE_DIR "" STRING "roc toolkit include directory")
 define_option(ROC_LIB_DIR "" STRING "roc toolkit library directory")
 define_option(DOWNLOAD_ROC ON BOOL "automatically download and build roc-toolkit")
+define_option(ROC_BRANCH "master" STRING "roc-toolkit branch")
 
 if(DOWNLOAD_ROC)
-  define_option(ROC_BRANCH "master" STRING "roc-toolkit branch")
   include("cmake/download_roc.cmake")
 else()
   add_custom_target(roc_lib) # empty target in this case
@@ -30,6 +30,21 @@ else()
 
   link_libraries("roc")
 endif()
+
+set(ALL_DEPENDENCIES
+  googletest_lib
+  roc_lib
+)
+
+set(OTHER_DEPENDENCIES ${ALL_DEPENDENCIES})
+foreach(DEPENDENCY IN LISTS ALL_DEPENDENCIES)
+  list(REMOVE_ITEM OTHER_DEPENDENCIES ${DEPENDENCY})
+  if(OTHER_DEPENDENCIES)
+    add_dependencies(${DEPENDENCY}
+      ${OTHER_DEPENDENCIES}
+      )
+  endif()
+endforeach()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -58,8 +73,7 @@ add_executable(rt-tests
 )
 
 add_dependencies(rt-tests
-  roc_lib
-  googletest_lib
+  ${ALL_DEPENDENCIES}
 )
 
 find_package(Threads)
