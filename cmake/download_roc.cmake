@@ -25,10 +25,9 @@ set(SCONS_CMD
   "AR=${CMAKE_AR}"
   "RANLIB=${CMAKE_RANLIB}"
   "STRIP=${CMAKE_STRIP}"
-)  
+)
 
-
-ExternalProject_Add(RocLibrary
+ExternalProject_Add(roc_lib
   GIT_REPOSITORY "https://github.com/roc-streaming/roc-toolkit.git"
   GIT_TAG origin/${ROC_BRANCH}
   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/roc-src"
@@ -44,13 +43,12 @@ ExternalProject_Add(RocLibrary
   LOG_BUILD ${USE_LOGFILES}
   LOG_INSTALL ${USE_LOGFILES}
   LOG_TEST ${USE_LOGFILES}
-  )
-
+)
 
 include_directories(
   "${CMAKE_CURRENT_BINARY_DIR}/roc-prefix/include"
 )
 
 link_directories(
-   "${CMAKE_CURRENT_BINARY_DIR}/roc-prefix/lib/"
+   "${CMAKE_CURRENT_BINARY_DIR}/roc-prefix/lib"
 )

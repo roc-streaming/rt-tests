@@ -45,6 +45,7 @@ Instructions
 ------------
 
 ### Simple build
+
 When using this method, CMake will automatically download and build dependencies (Roc Toolkit). Roc will be statically linked into the modules and there is no need to install it into the system.
 
 First install build tools:
@@ -64,12 +65,12 @@ Next build and run:
 make
 ```
 
-To specify **roc-toolkit** branch use cmake flag `ROC_TOOLKIT_BRANCH`
+To specify **roc-toolkit** branch use cmake flag `ROC_BRANCH`:
 
 ```
-mkdir build && cd build
-cmake -DROC_TOOLKIT_BRANCH=master .. && make
+ROC_BRANCH=master make
 ```
+
 ### Additional targets
 
 You can accomplish these additional tasks using the following targets.
@@ -96,10 +97,9 @@ Download, build and install Roc Toolkit into the system as described on [this pa
 mkdir build && cd build
 cmake -DDOWNLOAD_ROC=OFF .. && make
 ```
+
 To provide custom path to roc-toolkit library and headers use flags
 `ROC_INCLUDE_DIR` and `ROC_LIB_DIR`
-
-
 
 Workflow
 --------

@@ -12,9 +12,8 @@ define_option(DOWNLOAD_ROC ON BOOL "automatically download and build roc-toolkit
 if(DOWNLOAD_ROC)
   define_option(ROC_BRANCH "master" STRING "roc-toolkit branch")
   include("cmake/download_roc.cmake")
-  add_custom_target(download_roc DEPENDS RocLibrary)
 else()
-  add_custom_target(download_roc) # download_roc an empty target in this case
+  add_custom_target(roc_lib) # empty target in this case
   if(NOT ROC_INCLUDE_DIR STREQUAL "")
     get_filename_component(ROC_INCLUDE_DIR "${ROC_INCLUDE_DIR}" ABSOLUTE)
     message(STATUS "Using ROC_INCLUDE_DIR - ${ROC_INCLUDE_DIR}")
@@ -58,7 +57,10 @@ add_executable(rt-tests
   tests/test_service_quality.cpp
 )
 
-add_dependencies(rt-tests googletest download_roc)
+add_dependencies(rt-tests
+  roc_lib
+  googletest_lib
+)
 
 find_package(Threads)
 
@@ -67,10 +69,12 @@ target_link_libraries(rt-tests
   gtest
   gtest_main
   ${CMAKE_DL_LIBS}
-  ${CMAKE_THREAD_LIBS_INIT})
+  ${CMAKE_THREAD_LIBS_INIT}
+)
 
 add_custom_command(TARGET rt-tests POST_BUILD
+  COMMENT "Copying compile_commands.json to project root"
   COMMAND "${CMAKE_COMMAND}" -E copy
      "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
      "${PROJECT_SOURCE_DIR}/compile_commands.json"
-     COMMENT "Copying compile_commands.json to project root")
+)
