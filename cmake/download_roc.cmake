@@ -46,7 +46,7 @@ ExternalProject_Add(roc_lib
   LOG_TEST ${USE_LOGFILES}
 )
 
-include_directories(
+include_directories(SYSTEM
   "${CMAKE_CURRENT_BINARY_DIR}/roc-prefix/include"
 )
 

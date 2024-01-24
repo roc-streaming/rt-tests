@@ -13,7 +13,7 @@ ExternalProject_Add(googletest_lib
   LOG_BUILD         ON
 )
 
-include_directories(
+include_directories(SYSTEM
   "${CMAKE_CURRENT_BINARY_DIR}/googletest-src/googletest/include"
 )
 

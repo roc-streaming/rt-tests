@@ -31,11 +31,11 @@ else()
   link_libraries("roc")
 endif()
 
+# serialize dependencies
 set(ALL_DEPENDENCIES
   googletest_lib
   roc_lib
 )
-
 set(OTHER_DEPENDENCIES ${ALL_DEPENDENCIES})
 foreach(DEPENDENCY IN LISTS ALL_DEPENDENCIES)
   list(REMOVE_ITEM OTHER_DEPENDENCIES ${DEPENDENCY})
@@ -46,26 +46,103 @@ foreach(DEPENDENCY IN LISTS ALL_DEPENDENCIES)
   endif()
 endforeach()
 
+set(EXECUTABLE_OUTPUT_PATH
+  ${PROJECT_SOURCE_DIR}/bin
+)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+add_compile_options(
+  -pthread
+  )
+add_link_options(
+  -pthread
+  )
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_compile_options(
+    -fno-omit-frame-pointer
+    -funwind-tables
+    -ggdb
+  )
+  add_compile_options(
+    -fsanitize=address
+    -fsanitize=undefined
+  )
+  add_link_options(
+    -fsanitize=address
+    -fsanitize=undefined
+  )
+endif()
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  add_compile_options(
+    -Werror
+    -Wall
+    -Wextra
+    # enable
+    -Wcast-qual
+    -Wctor-dtor-privacy
+    -Wdouble-promotion
+    -Wfloat-conversion
+    -Wformat-security
+    -Wformat=2
+    -Wlogical-op
+    -Wmissing-declarations
+    -Woverlength-strings
+    -Wpointer-arith
+    -Wsign-conversion
+    -Wstrict-null-sentinel
+    -Wuninitialized
+    # disable
+    -Wno-old-style-cast
+    -Wno-psabi
+    -Wno-system-headers
+    )
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(
+      -D_GLIBCXX_ASSERTIONS
+      -D_GLIBCXX_DEBUG
+      -D_GLIBCXX_SANITIZE_VECTOR
+      )
+  endif()
 endif()
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Weverything")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  add_compile_options(
+    -Werror
+    -Wall
+    -Wextra
+    # enable
+    -Wcast-qual
+    -Wdouble-promotion
+    -Wfloat-conversion
+    -Wformat-security
+    -Wformat=2
+    -Wnull-dereference
+    -Woverlength-strings
+    -Woverloaded-virtual
+    -Wpointer-arith
+    -Wsign-conversion
+    -Wuninitialized
+    -Wunused
+    # disable
+    -Wno-cast-align
+    -Wno-system-headers
+    -Wno-unused-private-field
+    )
 endif()
+
+add_compile_definitions(
+  _USE_MATH_DEFINES
+)
 
 add_executable(rt-tests
   main.cpp
@@ -86,9 +163,16 @@ target_link_libraries(rt-tests
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
-add_custom_command(TARGET rt-tests POST_BUILD
-  COMMENT "Copying compile_commands.json to project root"
-  COMMAND "${CMAKE_COMMAND}" -E copy
-     "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
-     "${PROJECT_SOURCE_DIR}/compile_commands.json"
-)
+if(NOT CMAKE_CROSSCOMPILING)
+  add_custom_command(
+    COMMENT "Copying compile_commands.json to project root"
+    DEPENDS rt-tests
+    OUTPUT ${PROJECT_SOURCE_DIR}/compile_commands.json
+    COMMAND ${CMAKE_COMMAND} -E copy
+      ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
+      ${PROJECT_SOURCE_DIR}/compile_commands.json
+  )
+  add_custom_target(compile_commands ALL
+    DEPENDS ${PROJECT_SOURCE_DIR}/compile_commands.json
+  )
+endif()
