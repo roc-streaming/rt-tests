@@ -1,21 +1,30 @@
-name: build
+name: "build"
 
 on:
-  repository_dispatch:
-
   push:
     branches:
       - main
+      - v*
+    tags:
+      - v*
 
   pull_request:
-    branches:
-      - main
+
+  repository_dispatch:
+    types:
+      - trigger_build
+
+  workflow_dispatch:
 
   schedule:
     - cron: '0 0 * * 1'
 
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  ubuntu-systemwide-roc:
+  ubuntu-system-wide-roc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
