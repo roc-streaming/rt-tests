@@ -22,7 +22,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: build-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,14 +30,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install g++ pkg-config scons ragel gengetopt \
-            libuv1-dev libunwind-dev libpulse-dev libsox-dev libcpputest-dev libspeexdsp-dev \
-            libtool intltool autoconf automake make cmake
+        uses: roc-streaming/ci/actions/install-packages@main
+        with:
+          packages: |
+            g++ pkg-config scons ragel gengetopt
+            libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libpulse-dev
+            libtool intltool autoconf automake make cmake meson
 
       - name: Build Roc
         run: |
@@ -55,14 +56,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install g++ pkg-config scons ragel gengetopt \
-            libuv1-dev libunwind-dev libpulse-dev libsox-dev libcpputest-dev libspeexdsp-dev \
-            libtool intltool autoconf automake make cmake
+        uses: roc-streaming/ci/actions/install-packages@main
+        with:
+          packages: |
+            g++ pkg-config scons ragel gengetopt
+            libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libpulse-dev
+            libtool intltool autoconf automake make cmake meson
 
       - name: Build Roc
         run: |
@@ -82,14 +84,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install g++ pkg-config scons ragel gengetopt \
-            libuv1-dev libunwind-dev libpulse-dev libsox-dev libcpputest-dev libspeexdsp-dev \
-            libtool intltool autoconf automake make cmake
+        uses: roc-streaming/ci/actions/install-packages@main
+        with:
+          packages: |
+            g++ pkg-config scons ragel gengetopt
+            libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libpulse-dev
+            libtool intltool autoconf automake make cmake meson
 
       - name: Build tests
         run: |
