@@ -1,6 +1,8 @@
+> <h1>PROJECT IS WORK IN PROGRESS!</h1>
+
 # Real-time tests for Roc Toolkit
 
-[![Build](https://github.com/roc-streaming/rt-tests/workflows/build/badge.svg?branch=main)](https://github.com/roc-streaming/rt-tests/actions/workflows/build.yml?query=branch%3Amain) [![Matrix chat](https://matrix.to/img/matrix-badge.svg)](https://app.element.io/#/room/#roc-streaming:matrix.org)
+[![Build](https://github.com/roc-streaming/rt-tests/actions/workflows/build.yaml/badge.svg)](https://github.com/roc-streaming/rt-tests/actions/workflows/build.yaml) [![Matrix chat](https://matrix.to/img/matrix-badge.svg)](https://app.element.io/#/room/#roc-streaming:matrix.org)
 
 About rt-tests
 --------------
@@ -11,7 +13,7 @@ The scope if this repo is [non-functional](https://en.wikipedia.org/wiki/Non-fun
 * latency tests
 * performance tests (benchmarks)
 * stress tests
-* tests invloving real network interfaces and audio devices
+* tests involving real network interfaces and audio devices
 
 About Roc
 ---------
@@ -87,7 +89,7 @@ To format code:
 make fmt
 ```
 
-### Advanced bulid
+### Advanced build
 
 You can disable automatic downloading of roc-toolkit and build it manually.
 
